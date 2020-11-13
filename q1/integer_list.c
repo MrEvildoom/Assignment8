@@ -6,6 +6,8 @@
 /*** Types ***/
 
 struct il_list {
+    int* data;
+    int len;    
     // TODO 4
 };
 
@@ -46,8 +48,10 @@ static void swap(void* datav, int a, int b) {
  */
 
 struct il_list* il_new(int size) {
-    // TODO 4
-    return NULL;
+    struct* list= malloc(sizeof(list));
+    list->data = malloc(sizeof(int) * size);
+    list.len = 0;
+    return list;
 }
 
 
@@ -57,6 +61,8 @@ struct il_list* il_new(int size) {
 
 void il_delete(struct il_list* list) {
     // TODO 4
+    free(list->data);
+    free(list);
 }
 
 
@@ -65,7 +71,8 @@ void il_delete(struct il_list* list) {
  */
 
 void il_add(struct il_list* list, int value) {
-    // TODO 4
+    len++;
+    list->data[list.len] = value;
 }
 
 
