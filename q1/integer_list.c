@@ -8,11 +8,11 @@
 struct il_list {
     int* data;
     int len;    
-    // TODO 4
 };
 
 struct il_iterator {
-    // TODO 5
+    struct il_list* list;
+    int* cursor;
 };
 
 
@@ -48,10 +48,10 @@ static void swap(void* datav, int a, int b) {
  */
 
 struct il_list* il_new(int size) {
-    struct* list= malloc(sizeof(list));
-    list->data = malloc(sizeof(int) * size);
-    list.len = 0;
-    return list;
+    struct il_list* ls = malloc(sizeof(struct il_list));
+    ls->data = malloc(sizeof(int) * size);
+    ls->len = 0;
+    return ls;
 }
 
 
@@ -71,8 +71,8 @@ void il_delete(struct il_list* list) {
  */
 
 void il_add(struct il_list* list, int value) {
-    len++;
-    list->data[list.len] = value;
+    list->len++;
+    list->data[list->len] = value;
 }
 
 
@@ -94,8 +94,11 @@ void il_sort(struct il_list* list) {
  */
 
 void* il_iterator(void* listv) {
-    // TODO 5
-    return NULL; // PLACEHOLDER
+    struct il_list* list = listv;
+    struct il_iterator* iterator = malloc(sizeof(*iterator));
+    iterator->list = list;
+    iterator->cursor = list->data;
+    return iterator;
 }
 
 
@@ -104,8 +107,8 @@ void* il_iterator(void* listv) {
  */
 
 int il_has_next(void* iteratorv) {
-    // TODO 5
-    return 0; // PLACEHOLDER
+    struct il_iterator* iterator = iteratorv;
+    return (iterator->cursor != iterator->list->data + iterator->list->len);
 }
 
 
@@ -114,8 +117,9 @@ int il_has_next(void* iteratorv) {
  */
 
 void* il_get_next(void* iteratorv) {
-    // TODO 5
-    return NULL; // PLACEHOLDER
+    struct il_iterator* iterator = iteratorv;
+    iterator->cursor = iterator->cursor + 1;
+    return iterator->cursor;
 }
 
 
@@ -123,5 +127,5 @@ void* il_get_next(void* iteratorv) {
  * Delete iterator
  */
 void il_delete_iterator(void* iterator) {
-    // TODO 5
+    free(iterator);
 }

@@ -55,6 +55,15 @@ void test_integer_tree(int* vals, int n) {
     it_delete(it);
 }
 
+// void test_int_list(int* vals, int n) {
+//     printf("Integer List Tests\n");
+//     struct il_list* il = il_new(n);
+//     for (int i = 0; i < n; i++)
+//         il_add(il, vals [i]);
+//     for (int i = 0; i < n; i++)
+//         printf("%d\n", il->data [i]);
+// }
+
 void test_integer_list(int* vals, int n) {
     printf("Integer List\n");
     struct il_list* il = il_new(n);
@@ -65,6 +74,7 @@ void test_integer_list(int* vals, int n) {
 
     printf("Unordered List of Values:\n");
     // TODO 6: use foreach to print unsorted (i.e., input-order) list of values
+    foreach(il, il_iterator, il_has_next, il_get_next, il_delete_iterator, &print);
 
     // TODO 7: see sort.c and sort.h
     // TODO 8: see integer_list.c
@@ -87,4 +97,6 @@ int main(int argc, char** argv) {
         vals[i-1] = atoi(argv[i]);
     test_integer_tree(vals, n);
     test_integer_list(vals, n);
+
+    // test_int_list(vals, n);
 }
