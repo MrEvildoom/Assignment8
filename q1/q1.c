@@ -24,12 +24,7 @@ void test_integer_tree(int* vals, int n) {
     printf("Order List of Values:\n");
     // TODO 1: Replace next 6 lines with call to foreach
     foreach(it, it_iterator, it_has_next, it_get_next, it_delete_iterator, &print);
-    // struct it_iterator* iterator = it_iterator (it);
-    // while (it_has_next(iterator)) {
-    //     void* element = it_get_next(iterator);
-    //     print(element);
-    // }
-    // it_delete_iterator(iterator);
+
 
     // TODO 2: see foreach.c
 
