@@ -10,9 +10,10 @@ void sort (
 );
 
 int compareint(void* listv, int a, int b);
-int comparechar(void* listv, int a, int b);
+int comparestr(void* listv, int a, int b);
 
 void swapint(void* listv, int a, int b);
-void swapchar(void* listv, int a, int b);
+void swapstr(void* listv, int a, int b);
 
 void test_sort();
+void test_compare();
