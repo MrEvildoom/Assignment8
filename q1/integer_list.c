@@ -7,7 +7,9 @@
 
 struct il_list {
     int* data;
-    int len;    
+    int len;
+    // int actual_size;
+    // add current size along w/ length    
 };
 
 struct il_iterator {
@@ -109,6 +111,11 @@ void* il_iterator(void* listv) {
 int il_has_next(void* iteratorv) {
     struct il_iterator* iterator = iteratorv;
     return (iterator->cursor != iterator->list->data + iterator->list->len);
+
+    // struct il_iterator* iterator = iteratorv;
+    // if (ie->cursor < il.list->actual_size)
+    // return 1;
+    // return 0;
 }
 
 
@@ -120,6 +127,12 @@ void* il_get_next(void* iteratorv) {
     struct il_iterator* iterator = iteratorv;
     iterator->cursor = iterator->cursor + 1;
     return iterator->cursor;
+
+    // struct il_iterator il = iteratorv;
+    // void * bob = &il->list_il->list[il->cursor];
+    // il -> cursor ++
+    // return bob
+
 }
 
 
