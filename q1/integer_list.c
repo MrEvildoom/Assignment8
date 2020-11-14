@@ -1,15 +1,15 @@
 #include <stdlib.h>
 #include "integer_list.h"
 #include "sort.h"
+#include <stdio.h>
 
 
 /*** Types ***/
 
 struct il_list {
     int* data;
-    int len;
-    // int actual_size;
-    // add current size along w/ length    
+    int len;  // number of elements in list
+    int size; // max elements in list
 };
 
 struct il_iterator {
@@ -53,6 +53,7 @@ struct il_list* il_new(int size) {
     struct il_list* ls = malloc(sizeof(struct il_list));
     ls->data = malloc(sizeof(int) * size);
     ls->len = 0;
+    ls->size = size;
     return ls;
 }
 
@@ -73,8 +74,12 @@ void il_delete(struct il_list* list) {
  */
 
 void il_add(struct il_list* list, int value) {
+  if (list->len < list->size) {
     list->len++;
     list->data[list->len] = value;
+  } else {
+    printf("il_add failed, container too small");
+  }
 }
 
 
@@ -83,7 +88,7 @@ void il_add(struct il_list* list, int value) {
  */
 
 void il_sort(struct il_list* list) {
-    // TODO 8
+    sort(list, list->len, compareint, swapint);
 }
 
 

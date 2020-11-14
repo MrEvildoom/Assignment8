@@ -3,14 +3,6 @@
 #include "sort.h"
 
 
-int comparechar(void* listv, int a, int b) {
-    char* list = listv;
-    return strcmp (list + a, list + b);
-    // if Return value < 0 then it indicates str1 is less than str2.
-    // if Return value > 0 then it indicates str2 is less than str1.
-    // if Return value = 0 then it indicates str1 is equal to str2
-}
-
 int compareint(void* listv, int a, int b) {
   int* list = listv;
   if (list + a < list + b) {
@@ -31,6 +23,13 @@ void swapint(void* listv, int a, int b) {
     list[b] = t;
 }
 
+int comparechar(void* listv, int a, int b) {
+    char* list = listv;
+    return strcmp (list[a], list[b]);
+    // if Return value < 0 then it indicates str1 is less than str2.
+    // if Return value > 0 then it indicates str2 is less than str1.
+    // if Return value = 0 then it indicates str1 is equal to str2
+}
 
 void swapchar(void* listv, int a, int b) {
     char** list = listv;
@@ -67,15 +66,14 @@ void sort (
 }
 
 void test_sort() {
-    char* list[] = {"Cat", "Elephant", "Dog", "Lion", "Zebra", "Ape"};
-    sort (list, 6, comparechar, swapchar);
-    for (int i = 0; i < 6; i++)
-        printf("%s\n", list[i]);
-}
+  char* listchar[] = {"a", "b", "c"};
+    // char* listchar[] = {"Cat", "Elephant", "Dog", "Lion", "Zebra", // "Ape"};
+    sort (listchar, 3, comparechar, swapchar);
+    for (int i = 0; i < 3; i++)
+        printf("%s\n", listchar[i]);
 
-void test_sort_int() {
-    int list[] = {1,4,5,2,6,3};
-    sort (&list, 6, compareint, swapint);
-    for (int i = 0; i < 6; i++)
-        printf("%d\n", list[i]);
+    // int listint[] = {1,4,5,2,6,3};
+    // sort (&listint, 6, compareint, swapint);
+    // for (int i = 0; i < 6; i++)
+    //     printf("%d\n", listint[i]);
 }

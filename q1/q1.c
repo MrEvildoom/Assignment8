@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "foreach.h"
+#include "sort.h"
 #include "integer_list.h"
 #include "integer_tree.h"
 
@@ -20,14 +21,14 @@ void sum(void* ipv) {
     sm += *ip;
 }
 
-void it_min(void* ipv) {
+void min(void* ipv) {
     int* ip = ipv;
     if (*ip < mn) {
         mn = *ip;
     }
 }
 
-void it_max(void* ipv) {
+void max(void* ipv) {
     int* ip = ipv;
     if (*ip > mx) {
       mx = *ip;
@@ -47,8 +48,8 @@ void test_integer_tree(int* vals, int n) {
 
     // TODO 3: use foreach to compute sum, min, and max of values in tree
     sm = 0, mn = 99999999, mx = -1;
-    foreach(it, it_iterator, it_has_next, it_get_next, it_delete_iterator, &it_min);
-    foreach(it, it_iterator, it_has_next, it_get_next, it_delete_iterator, &it_max);
+    foreach(it, it_iterator, it_has_next, it_get_next, it_delete_iterator, &min);
+    foreach(it, it_iterator, it_has_next, it_get_next, it_delete_iterator, &max);
     foreach(it, it_iterator, it_has_next, it_get_next, it_delete_iterator, &sum);
     printf ("Stats: sum %d min %d max %d\n", sm, mn, mx);
 
@@ -80,10 +81,16 @@ void test_integer_list(int* vals, int n) {
     // TODO 8: see integer_list.c
 
     printf("Ordered List of Values:\n");
-    // TODO 9: use li_sort and then foreach to print sorted list of values
+    // TODO 9: use il_sort and then foreach to print sorted list of values
+    il_sort(il);
+    foreach(il, il_iterator, il_has_next, il_get_next, il_delete_iterator, &print);
 
-    // TODO 10: use foreach to compute sum, min, and max of values in list
-    sm = 0, mn = 99999999, mx = -1;
+    // TODO 10: use foreach to compute sum, min, and max of values in list\
+    mn = 99999999, mx = -1;
+    sm = 0;
+    foreach(il, il_iterator, il_has_next, il_get_next, il_delete_iterator, &min);
+    foreach(il, il_iterator, il_has_next, il_get_next, il_delete_iterator, &max);
+    foreach(il, il_iterator, il_has_next, il_get_next, il_delete_iterator, &sum);
     printf ("Stats: sum %d min %d max %d\n", sm, mn, mx);
 
     il_delete(il);
@@ -91,12 +98,13 @@ void test_integer_list(int* vals, int n) {
 
 
 int main(int argc, char** argv) {
-    int n = argc - 1;
-    int vals[n];
-    for (int i=1; i<n + 1; i++)
-        vals[i-1] = atoi(argv[i]);
-    test_integer_tree(vals, n);
-    test_integer_list(vals, n);
+    // int n = argc - 1;
+    // int vals[n];
+    // for (int i=1; i<n + 1; i++)
+    //     vals[i-1] = atoi(argv[i]);
+    // test_integer_tree(vals, n);
+    // test_integer_list(vals, n);
 
-    // test_int_list(vals, n);
+    // // test_int_list(vals, n);
+    test_sort();
 }

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "stack.h"
 #include "integer_tree.h"
+#include "sort.h"
 
 
 /*** Types ***/

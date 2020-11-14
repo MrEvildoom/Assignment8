@@ -8,4 +8,11 @@ void sort (
     int (*cmp) (void*, int a, int b),
     void (*swp) (void* list, int a, int b)
 );
+
+int compareint(void* listv, int a, int b);
+int comparechar(void* listv, int a, int b);
+
+void swapint(void* listv, int a, int b);
+void swapchar(void* listv, int a, int b);
+
 void test_sort();
