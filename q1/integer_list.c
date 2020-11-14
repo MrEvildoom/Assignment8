@@ -26,9 +26,17 @@ struct il_iterator {
  * Compare data[a] and data[b], return -1 if data[a] is smaller, 1 if it is larger, and 0 if they are equal
  */
 
-static int compare(void* datav, int a, int b) {
-    // TODO 8
-    return 0; // PLACEHOLDER
+static int compare(void* listv, int a, int b) {
+    struct il_list* list = listv;
+    if (list->data[a] < list->data[b]) {
+        return -1;
+    }
+    if (list->data[a] > list->data[b]) {
+        return 1;
+    }
+    if (list->data[a] == list->data[b]) {
+        return 0;
+    }
 }
 
 
@@ -36,8 +44,11 @@ static int compare(void* datav, int a, int b) {
  * Swap data[a] and data[b]
  */
 
-static void swap(void* datav, int a, int b) {
-    // TODO 8
+static void swap(void* listv, int a, int b) {
+  struct il_list* list = listv;
+  int t = list->data[a];
+  list->data[a] = list->data[b];
+  list->data[b] = t;
 }
 
 
@@ -75,8 +86,8 @@ void il_delete(struct il_list* list) {
 
 void il_add(struct il_list* list, int value) {
   if (list->len < list->size) {
-    list->len++;
     list->data[list->len] = value;
+    list->len++;
   } else {
     printf("il_add failed, container too small");
   }
@@ -88,7 +99,7 @@ void il_add(struct il_list* list, int value) {
  */
 
 void il_sort(struct il_list* list) {
-    sort(list, list->len, compareint, swapint);
+    sort(list, list->len, compare, swap);
 }
 
 

@@ -98,13 +98,11 @@ void test_integer_list(int* vals, int n) {
 
 
 int main(int argc, char** argv) {
-    // int n = argc - 1;
-    // int vals[n];
-    // for (int i=1; i<n + 1; i++)
-    //     vals[i-1] = atoi(argv[i]);
-    // test_integer_tree(vals, n);
-    // test_integer_list(vals, n);
-
-    // // test_int_list(vals, n);
-    test_compare();
+    int n = argc - 1;
+    int vals[n];
+    for (int i=1; i<n + 1; i++)
+        vals[i-1] = atoi(argv[i]);
+    test_integer_tree(vals, n);
+    test_integer_list(vals, n);
+    // test_sort();
 }

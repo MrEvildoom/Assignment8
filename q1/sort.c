@@ -4,14 +4,14 @@
 
 
 int compareint(void* listv, int a, int b) {
-  int* list = listv;
-  if (list + a < list + b) {
+  int** list = listv;
+  if (list[a] < list[b]) {
     return -1;
   }
-  if (list + a > list + b) {
+  if (list[a] > list[b]) {
     return 1;
   }
-  if (list + a == list + b) {
+  if (list[a] == list[b]) {
     return 0;
   }
 }
@@ -46,13 +46,6 @@ void swapstr(void* listv, int a, int b) {
 //             (b) an array of integers (this will help you with TODO 9)
 //         See also TODO 8 in sort.h
 
-// NOTES!!!!:
-// 4 parameters
-// char** -> void*
-// for other two: swap and compare methods
-// the only diff between sorting for a char and int...
-// do not need to put those into sort.h
-
 void sort (
     void* list,
     int length,
@@ -61,34 +54,29 @@ void sort (
 ) {
     for (int i = 0; i < length; i++)
         for (int j = i + 1; j < length; j++) {
-            // int temp = cmp(list, i, j);
-            // char char1 = list[i];
-            // char char2 = list[j];
-            // printf("\n char 1: %c, char 2: %c compval: %d", char1, char2, temp);
             if (cmp(list, i, j) > 0) 
                 swp(list, i, j);
         }
 }
 
-void test_sort() {
-  // char* listchar[] = {"a", "b", "c"};
-  //   char* listchar[] = {"Cat", "Elephant", "Dog", "Lion", "Zebra",q "Ape"};
-  //   sort (listchar, 6, comparechar, swapchar);
-  //   for (int i = 0; i < 6; i++)
-  //       printf("%s\n", listchar[i]);
+// void test_sort() {
+//     char* listchar[] = {"Cat", "Elephant", "Dog", "Lion", "Zebra", "Ape"};
+//     sort (listchar, 6, comparestr, swapstr);
+//     for (int i = 0; i < 6; i++)
+//         printf("%s\n", listchar[i]);
 
-  //   int listint[] = {1,4,5,2,6,3};
-  //   sort (&listint, 6, compareint, swapint);
-  //   for (int i = 0; i < 6; i++)
-  //       printf("%d\n", listint[i]);
-}
+//     int* listint[] = {1,4,5,2,6,3};
+//     sort (&listint, 6, compareint, swapint);
+//     for (int i = 0; i < 6; i++)
+//         printf("%d\n", listint[i]);
+// }
 
-void test_compare() {
-  char* listchar[] = {"a", "b"};
-  // int* listin[] = {1,2};
-  printf("\n%d", comparestr(listchar, 0, 1));
-  // printf("\n%d", compareint(listin, 0, 1));
-}
+// void test_compare() {
+//   char* listchar[] = {"a", "b"};
+//   // int* listin[] = {1,2};
+//   printf("\n%d", comparestr(listchar, 0, 1));
+//   // printf("\n%d", compareint(listin, 0, 1));
+// }
 
 // int compare(char** list, int a, int b) {
 //     return strcmp (list[a], list[b]);

@@ -15,5 +15,4 @@ int comparestr(void* listv, int a, int b);
 void swapint(void* listv, int a, int b);
 void swapstr(void* listv, int a, int b);
 
-void test_sort();
-void test_compare();
+// void test_sort();
