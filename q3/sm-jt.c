@@ -34,144 +34,146 @@ int exec() {
   int cont = 1;
   int addr, val;
 
-  void* jumptableinsOpCode[] = {&&C0, &&C1, &&C2, &&C3, &&C4, &&C6, &&DEFAULTOPCODE, &&C6, 
-                                &&C7, &&C8, &&C9, &&CA, &&CB, &&CD, &&CE, &&CF}
-  void* jumptableinsOp0[] = {}
-  if (insOpCode == 5 | insOpCode > 15, insOpCode < 0) {
-    goto ()
+  void* jumptableinsOpCode[] =  {&&C0, &&C1, &&C2, &&C3, &&C4, &&DEFAULTOPCODE, &&C6,
+                                 &&C7, &&C8, &&C9, &&CA, &&CB, &&CD, &&CE, &&CF}
+  void* jumptableinsOp0[] =     {&&C60, &&C61, &&C62, &&C63, &&C64, &&C65, &&C66, &&C67, &&C6F, &DEFAULTOP0};
+  
+  if (insOpCode == 5 | insOpCode > 15 | insOpCode < 0) {
+    jumptableinsOpCode[5]; // default op code
+  } else {
+    jumptableinsOpCode[insOpCode];
   }
-  if () {
-    goto ()
-  }
 
-  switch (insOpCode) {
+  C0: // ld $i, d .............. 0d-- iiii iiii
+    reg [insOp0] = insOpExt;
+    goto CONT;
 
-      case 0x0: // ld $i, d .............. 0d-- iiii iiii
-        reg [insOp0] = insOpExt;
-        break;
+  C1: // ld o(rs), rd .......... 1osd
+    addr = (insOp0 << 2) + reg [insOp1];
+    reg [insOp2] = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
+    goto CONT;
 
-      case 0x1: // ld o(rs), rd .......... 1osd
-        addr = (insOp0 << 2) + reg [insOp1];
-        reg [insOp2] = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
-        break;
+  C2: // ld (rs, ri, 2), rd .... 2sid
+    addr = reg [insOp0] + (reg [insOp1] << 2);
+    reg [insOp2] = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
+    goto CONT;
+          
+  C3: // st rs, o(rd) .......... 3sod
+    addr = (insOp1 << 2) + reg [insOp2];
+    val  = reg [insOp0];
+    mem [addr]   = val >> 24 & 0xff;
+    mem [addr+1] = val >> 16 & 0xff;
+    mem [addr+2] = val >>  8 & 0xff;
+    mem [addr+3] = val       & 0xff;
+    goto CONT;
 
-      case 0x2: // ld (rs, ri, 2), rd .... 2sid
-        addr = reg [insOp0] + (reg [insOp1] << 2);
-        reg [insOp2] = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
-        break;
+  C4: // st rs, (rd, ri, 4) .... 4sdi
+    addr = reg [insOp1] + (reg [insOp2] << 2);
+    val  = reg [insOp0];
+    mem [addr]   = val >> 24 & 0xff;
+    mem [addr+1] = val >> 16 & 0xff;
+    mem [addr+2] = val >>  8 & 0xff;
+    mem [addr+3] = val       & 0xff;
+    goto CONT;
+          
+  C6: // ALU ................... 6-sd
+    if (insOp0 == 0xf) {
+        goto jumptableinsOp0[8];
+    } else if (insOp0 > 7 | insOp0 < 0) {
+        goto jumptableinsOp0[9]; // default op
+    } else {
+        jumptableinsOp0[insOp0]
+    };
+          
+  C60: // mov rs, rd ........ 60sd
+      reg [insOp2] = reg [insOp1];
+      goto CONT;
+
+  C61: // add rs, rd ........ 61sd
+      reg [insOp2] = reg [insOp1] + reg [insOp2];
+      goto CONT;
+
+  C62: // and rs, rd ........ 62sd
+      reg [insOp2] = reg [insOp1] & reg [insOp2];
+      goto CONT;
+
+  C63: // inc rr ............ 63-r
+      reg [insOp2] = reg [insOp2] + 1;
+      goto CONT;
+
+  C64: // inca rr ........... 64-r
+      reg [insOp2] = reg [insOp2] + 4;
+      goto CONT;
+
+  C65: // dec rr ............ 65-r
+      reg [insOp2] = reg [insOp2] - 1;
+      goto CONT;
+
+  C66: // deca rr ........... 66-r
+      reg [insOp2] = reg [insOp2] -4;
+      goto CONT;
+
+  C67: // not ............... 67-r
+      reg [insOp2] = ~ reg [insOp2];
+      goto CONT;
+
+  C6F: // gpc ............... 6f-r
+      reg [insOp2] = pc + (insOp1 << 1);
+      goto CONT;
+
+  DEFAULTOP0:
+      printf ("Illegal ALU instruction: pc=0x%x fun=0x%x\n", pc, insOp0); // DEFAULT 1
         
-      case 0x3: // st rs, o(rd) .......... 3sod
-        addr = (insOp1 << 2) + reg [insOp2];
-        val  = reg [insOp0];
-        mem [addr]   = val >> 24 & 0xff;
-        mem [addr+1] = val >> 16 & 0xff;
-        mem [addr+2] = val >>  8 & 0xff;
-        mem [addr+3] = val       & 0xff;
-        break;
+  C7: // sh? $i,rd ............. 7dii
+    if (insOpImm > 0)
+      reg [insOp0] = reg [insOp0] << insOpImm;
+    else
+      reg [insOp0] = reg [insOp0] >> -insOpImm;
+    goto CONT;
 
-      case 0x4: // st rs, (rd, ri, 4) .... 4sdi
-        addr = reg [insOp1] + (reg [insOp2] << 2);
-        val  = reg [insOp0];
-        mem [addr]   = val >> 24 & 0xff;
-        mem [addr+1] = val >> 16 & 0xff;
-        mem [addr+2] = val >>  8 & 0xff;
-        mem [addr+3] = val       & 0xff;
-        break;
+  C8: // br o .................. 8-oo
+    pc += insOpImm << 1;
+    goto CONT;
 
-      case 0x6: // ALU ................... 6-sd
+  C9: // beq rs, o ............. 9roo
+    if (reg [insOp0] == 0)
+      pc += insOpImm << 1;
+    goto CONT;
+    
+  CA: // bgt rs, o .............. aroo
+    if (reg [insOp0] > 0)
+      pc += insOpImm << 1;
+    goto CONT;
 
-        switch (insOp0) {
-            case 0x0: // mov rs, rd ........ 60sd
-              reg [insOp2] = reg [insOp1];
-              break;
+  CB: // j i ................... b--- iiii iiii
+    pc = insOpExt;
+    goto CONT;
 
-            case 0x1: // add rs, rd ........ 61sd
-              reg [insOp2] = reg [insOp1] + reg [insOp2];
-              break;
+  CC: // j o(rr) ............... croo
+    pc = (((unsigned short) insOpImm) << 1) + reg [insOp0];
+    goto CONT;
 
-            case 0x2: // and rs, rd ........ 62sd
-              reg [insOp2] = reg [insOp1] & reg [insOp2];
-              break;
+  CD: // j *o(rr) .............. droo
+    // TODO
+    addr = (((unsigned short) insOpImm) << 2) + reg [insOp0];
+    pc = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
+    goto CONT;
 
-            case 0x3: // inc rr ............ 63-r
-              reg [insOp2] = reg [insOp2] + 1;
-              break;
+  CE: // j*(rr,ri,4) ............. eri-
+    // TODO
+    addr = ((reg[(unsigned short) insOp1]) << 2) + reg [insOp0];
+    pc = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
+    goto CONT;
 
-            case 0x4: // inca rr ........... 64-r
-              reg [insOp2] = reg [insOp2] + 4;
-              break;
+  CF: // halt or nop ............. f?--
+    if (insOp0 == 0)
+      cont = 0;
+    goto CONT;
 
-            case 0x5: // dec rr ............ 65-r
-              reg [insOp2] = reg [insOp2] - 1;
-              break;
+  DEFAULTOPCODE:
+    printf ("Illegal  instruction: pc=0x%x opCode=0x%x\n", pc, insOpCode); // DEFAULT 2
 
-            case 0x6: // deca rr ........... 66-r
-              reg [insOp2] = reg [insOp2] -4;
-              break;
-
-            case 0x7: // not ............... 67-r
-              reg [insOp2] = ~ reg [insOp2];
-              break;
-
-            case 0xf: // gpc ............... 6f-r
-              reg [insOp2] = pc + (insOp1 << 1);
-              break;
-
-            default:
-              printf ("Illegal ALU instruction: pc=0x%x fun=0x%x\n", pc, insOp0); // DEFAULT 1
-        }
-
-        break;
-        
-      case 0x7: // sh? $i,rd ............. 7dii
-        if (insOpImm > 0)
-          reg [insOp0] = reg [insOp0] << insOpImm;
-        else
-          reg [insOp0] = reg [insOp0] >> -insOpImm;
-        break;
-
-      case 0x8: // br o .................. 8-oo
-        pc += insOpImm << 1;
-        break;
-
-      case 0x9: // beq rs, o ............. 9roo
-        if (reg [insOp0] == 0)
-          pc += insOpImm << 1;
-        break;
-        
-      case 0xa: // bgt rs, o .............. aroo
-        if (reg [insOp0] > 0)
-          pc += insOpImm << 1;
-        break;
-
-      case 0xb: // j i ................... b--- iiii iiii
-        pc = insOpExt;
-        break;
-
-      case 0xc: // j o(rr) ............... croo
-        pc = (((unsigned short) insOpImm) << 1) + reg [insOp0];
-        break;
-
-      case 0xd: // j *o(rr) .............. droo
-        // TODO
-        addr = (((unsigned short) insOpImm) << 2) + reg [insOp0];
-        pc = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
-        break;
-
-      case 0xe: // j*(rr,ri,4) ............. eri-
-        // TODO
-        addr = ((reg[(unsigned short) insOp1]) << 2) + reg [insOp0];
-        pc = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
-        break;
-
-      case 0xf: // halt or nop ............. f?--
-        if (insOp0 == 0)
-          cont = 0;
-        break;
-
-      default:
-        printf ("Illegal  instruction: pc=0x%x opCode=0x%x\n", pc, insOpCode); // DEFAULT 2
-  }
+  CONT:
   return cont;
 }
 
