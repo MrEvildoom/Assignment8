@@ -34,7 +34,8 @@ int exec() {
   int cont = 1;
   int addr, val;
 
-  void* jumptableinsOpCode[] = {}
+  void* jumptableinsOpCode[] = {&&C0, &&C1, &&C2, &&C3, &&C4, &&C6, &&DEFAULTOPCODE, &&C6, 
+                                &&C7, &&C8, &&C9, &&CA, &&CB, &&CD, &&CE, &&CF}
   void* jumptableinsOp0[] = {}
   if (insOpCode == 5 | insOpCode > 15, insOpCode < 0) {
     goto ()
