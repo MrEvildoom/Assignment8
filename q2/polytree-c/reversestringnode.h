@@ -6,6 +6,11 @@
  */
 struct ReverseStringNode_class {
   // TODO add function pointers
+  int  (*compareTo) (void*, void*);
+  void (*printNode) (void*);
+  void (*insert)    (void*, void*);
+  void (*print)     (void*);
+  void (*delete)    (void*);
 };
 extern struct ReverseStringNode_class ReverseStringNode_class_table;
 
@@ -16,6 +21,14 @@ struct ReverseStringNode;
 struct ReverseStringNode {
   // TODO add class pointer and 
   // variables that are stored in instances of this class (including those introduced by super class)
+  struct ReverseStringNode_class* class;
+
+  // instance variables defined in super class(es)
+  struct ReverseStringNode* left;
+  struct ReverseStringNode* right;
+
+  // instance variables defined in this class
+  char* s;
 };
 
 /**

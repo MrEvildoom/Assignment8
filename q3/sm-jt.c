@@ -33,18 +33,32 @@ void fetch() {
 int exec() {
   int cont = 1;
   int addr, val;
+
+  void* jumptableinsOpCode[] = {}
+  void* jumptableinsOp0[] = {}
+  if (insOpCode == 5 | insOpCode > 15, insOpCode < 0) {
+    goto ()
+  }
+  if () {
+    goto ()
+  }
+
   switch (insOpCode) {
+
       case 0x0: // ld $i, d .............. 0d-- iiii iiii
         reg [insOp0] = insOpExt;
         break;
+
       case 0x1: // ld o(rs), rd .......... 1osd
         addr = (insOp0 << 2) + reg [insOp1];
         reg [insOp2] = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
         break;
+
       case 0x2: // ld (rs, ri, 2), rd .... 2sid
         addr = reg [insOp0] + (reg [insOp1] << 2);
         reg [insOp2] = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
         break;
+        
       case 0x3: // st rs, o(rd) .......... 3sod
         addr = (insOp1 << 2) + reg [insOp2];
         val  = reg [insOp0];
@@ -53,6 +67,7 @@ int exec() {
         mem [addr+2] = val >>  8 & 0xff;
         mem [addr+3] = val       & 0xff;
         break;
+
       case 0x4: // st rs, (rd, ri, 4) .... 4sdi
         addr = reg [insOp1] + (reg [insOp2] << 2);
         val  = reg [insOp0];
@@ -61,78 +76,100 @@ int exec() {
         mem [addr+2] = val >>  8 & 0xff;
         mem [addr+3] = val       & 0xff;
         break;
+
       case 0x6: // ALU ................... 6-sd
+
         switch (insOp0) {
             case 0x0: // mov rs, rd ........ 60sd
               reg [insOp2] = reg [insOp1];
               break;
+
             case 0x1: // add rs, rd ........ 61sd
               reg [insOp2] = reg [insOp1] + reg [insOp2];
               break;
+
             case 0x2: // and rs, rd ........ 62sd
               reg [insOp2] = reg [insOp1] & reg [insOp2];
               break;
+
             case 0x3: // inc rr ............ 63-r
               reg [insOp2] = reg [insOp2] + 1;
               break;
+
             case 0x4: // inca rr ........... 64-r
               reg [insOp2] = reg [insOp2] + 4;
               break;
+
             case 0x5: // dec rr ............ 65-r
               reg [insOp2] = reg [insOp2] - 1;
               break;
+
             case 0x6: // deca rr ........... 66-r
               reg [insOp2] = reg [insOp2] -4;
               break;
+
             case 0x7: // not ............... 67-r
               reg [insOp2] = ~ reg [insOp2];
               break;
+
             case 0xf: // gpc ............... 6f-r
               reg [insOp2] = pc + (insOp1 << 1);
               break;
+
             default:
-              printf ("Illegal ALU instruction: pc=0x%x fun=0x%x\n", pc, insOp0);
+              printf ("Illegal ALU instruction: pc=0x%x fun=0x%x\n", pc, insOp0); // DEFAULT 1
         }
+
         break;
+        
       case 0x7: // sh? $i,rd ............. 7dii
         if (insOpImm > 0)
           reg [insOp0] = reg [insOp0] << insOpImm;
         else
           reg [insOp0] = reg [insOp0] >> -insOpImm;
         break;
+
       case 0x8: // br o .................. 8-oo
         pc += insOpImm << 1;
         break;
+
       case 0x9: // beq rs, o ............. 9roo
         if (reg [insOp0] == 0)
           pc += insOpImm << 1;
         break;
+        
       case 0xa: // bgt rs, o .............. aroo
         if (reg [insOp0] > 0)
           pc += insOpImm << 1;
         break;
+
       case 0xb: // j i ................... b--- iiii iiii
         pc = insOpExt;
         break;
+
       case 0xc: // j o(rr) ............... croo
         pc = (((unsigned short) insOpImm) << 1) + reg [insOp0];
         break;
+
       case 0xd: // j *o(rr) .............. droo
         // TODO
         addr = (((unsigned short) insOpImm) << 2) + reg [insOp0];
         pc = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
         break;
+
       case 0xe: // j*(rr,ri,4) ............. eri-
         // TODO
         addr = ((reg[(unsigned short) insOp1]) << 2) + reg [insOp0];
         pc = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
         break;
+
       case 0xf: // halt or nop ............. f?--
         if (insOp0 == 0)
           cont = 0;
         break;
+
       default:
-        printf ("Illegal  instruction: pc=0x%x opCode=0x%x\n", pc, insOpCode);
+        printf ("Illegal  instruction: pc=0x%x opCode=0x%x\n", pc, insOpCode); // DEFAULT 2
   }
   return cont;
 }

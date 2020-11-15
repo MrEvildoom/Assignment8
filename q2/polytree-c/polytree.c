@@ -15,15 +15,15 @@ int main(int argc, char** argv) {
       if (strcmp(argv[1], "i") == 0)
         // TODO stub
         // note that integer value of argument atoi(argv[i])
-        node = NULL; 
+        node = new_IntegerNode(atoi(argv[i]));
       else if (strcmp(argv[1], "s") == 0)
         node = new_StringNode(argv[i]);
       else if (strcmp(argv[1], "r") == 0)
         // TODO stub
-        node = NULL; 
+        node = new_ReverseStringNode(argv[i]);
       else if (strcmp(argv[1], "l") == 0)
         // TODO stub
-        node = NULL; 
+        node = new_LoggingStringNode(argv[i]);
       if (node != NULL) {
         if (tree == NULL)
           tree = node;
@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
         // TODO print sum
       }
       // TODO node->delete()
+      Node_delete(tree);
     }
   }
 }

@@ -53,3 +53,18 @@ void Node_print(void* thisv) {
     this->class->print(this->right);
 }
 
+void Node_delete(void* thisv) {
+  struct Node* this = thisv;
+  if(this == NULL) {
+    return;
+  }
+	if (this->left != NULL) {
+    Node_delete( this->left);
+  }
+	if (this->right != NULL) {
+    Node_delete(this->right);
+  }
+	free(this);
+	return;
+}
+

@@ -11,3 +11,5 @@ void*           il_iterator        (void* list);                       // return
 int             il_has_next        (void* iterator);                   // returns true iff iterator has more elements to produce
 void*           il_get_next        (void* iterator);                   // return pointer to next element and advance iterator's cursor
 void            il_delete_iterator (void* iterator);                   // delete iterator
+
+void test_il();
