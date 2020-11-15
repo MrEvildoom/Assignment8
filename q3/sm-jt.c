@@ -50,24 +50,24 @@ int exec() {
     printf("InsOp %d error", insOpCode); // should never reach this line
 
     C0: // ld $i, d .............. 0d-- iiii iiii
-        printf("\nC0");
+        // printf("\nC0");
         reg [insOp0] = insOpExt;
         goto CONT;
 
     C1: // ld o(rs), rd .......... 1osd
-        printf("\n C1");
+        // printf("\n C1");
         addr = (insOp0 << 2) + reg [insOp1];
         reg [insOp2] = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
         goto CONT;
 
     C2: // ld (rs, ri, 2), rd .... 2sid
-        printf("\nC2");
+        // printf("\nC2");
         addr = reg [insOp0] + (reg [insOp1] << 2);
         reg [insOp2] = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
         goto CONT;
             
     C3: // st rs, o(rd) .......... 3sod
-        printf("\nC3");
+        // printf("\nC3");
         addr = (insOp1 << 2) + reg [insOp2];
         val  = reg [insOp0];
         mem [addr]   = val >> 24 & 0xff;
@@ -77,7 +77,7 @@ int exec() {
         goto CONT;
 
     C4: // st rs, (rd, ri, 4) .... 4sdi
-        printf("\nC4");
+        // printf("\nC4");
         addr = reg [insOp1] + (reg [insOp2] << 2);
         val  = reg [insOp0];
         mem [addr]   = val >> 24 & 0xff;
@@ -87,7 +87,7 @@ int exec() {
         goto CONT;
             
     C6: // ALU ................... 6-sd
-        printf("\nC6");
+        // printf("\nC6");
         if (insOp0 == 0xf) {
             goto *jumptableinsOp0[8];
         } else if (insOp0 > 7 | insOp0 < 0) {
@@ -99,57 +99,57 @@ int exec() {
     printf("InsOp0 %d error", insOp0); // should never reach this line
 
     C60: // mov rs, rd ........ 60sd
-        printf("\nC60");
+        // printf("\nC60");
         reg [insOp2] = reg [insOp1];
         goto CONT;
 
     C61: // add rs, rd ........ 61sd
-        printf("\nC61");
+        // printf("\nC61");
         reg [insOp2] = reg [insOp1] + reg [insOp2];
         goto CONT;
 
     C62: // and rs, rd ........ 62sd
-        printf("\nC62");
+        // printf("\nC62");
         reg [insOp2] = reg [insOp1] & reg [insOp2];
         goto CONT;
 
     C63: // inc rr ............ 63-r
-        printf("\nC63");
+        // printf("\nC63");
         reg [insOp2] = reg [insOp2] + 1;
         goto CONT;
 
     C64: // inca rr ........... 64-r
-        printf("\nC64");
+        // printf("\nC64");
         reg [insOp2] = reg [insOp2] + 4;
         goto CONT;
 
     C65: // dec rr ............ 65-r
-        printf("\n C65");
+        // printf("\n C65");
         reg [insOp2] = reg [insOp2] - 1;
         goto CONT;
 
     C66: // deca rr ........... 66-r
-        printf("\n C66");
+        // printf("\n C66");
         reg [insOp2] = reg [insOp2] -4;
         goto CONT;
 
     C67: // not ............... 67-r
-        printf("\n C67");
+        // printf("\n C67");
         reg [insOp2] = ~ reg [insOp2];
         goto CONT;
 
     C6F: // gpc ............... 6f-r
-        printf("\n C6F");
+        // printf("\n C6F");
         reg [insOp2] = pc + (insOp1 << 1);
         goto CONT;
 
     DEFAULTOP0:
-        printf("\n Default Op 0");
+        // printf("\n Default Op 0");
         printf ("Illegal ALU instruction: pc=0x%x fun=0x%x\n", pc, insOp0); // DEFAULT 1
         goto CONT;
 
     C7: // sh? $i,rd ............. 7dii
-        printf("\n C7");
+        // printf("\n C7");
         if (insOpImm > 0)
         reg [insOp0] = reg [insOp0] << insOpImm;
         else
@@ -157,47 +157,47 @@ int exec() {
         goto CONT;
 
     C8: // br o .................. 8-oo
-        printf("\n C8");
+        // printf("\n C8");
         pc += insOpImm << 1;
         goto CONT;
 
     C9: // beq rs, o ............. 9roo
-        printf("\n C9");
+        // printf("\n C9");
         if (reg [insOp0] == 0)
         pc += insOpImm << 1;
         goto CONT;
         
     CA: // bgt rs, o .............. aroo
-        printf("\n CA");
+        // printf("\n CA");
         if (reg [insOp0] > 0)
         pc += insOpImm << 1;
         goto CONT;
 
     CB: // j i ................... b--- iiii iiii
-        printf("\n CB");
+        // printf("\n CB");
         pc = insOpExt;
         goto CONT;
 
     CC: // j o(rr) ............... croo
-        printf("\n CC");
+        // printf("\n CC");
         pc = (((unsigned short) insOpImm) << 1) + reg [insOp0];
         goto CONT;
 
     CD: // j *o(rr) .............. droo
-        printf("\n CD");
+        // printf("\n CD");
         addr = (((unsigned short) insOpImm) << 2) + reg [insOp0];
         pc = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
         goto CONT;
 
     CE: // j*(rr,ri,4) ............. eri-
         // TODO
-        printf("\n CE");
+        // printf("\n CE");
         addr = ((reg[(unsigned short) insOp1]) << 2) + reg [insOp0];
         pc = mem [addr] << 24 | mem [addr+1] << 16 | mem [addr+2] << 8 | mem [addr+3];
         goto CONT;
 
     CF: // halt or nop ............. f?--
-    printf("\n CF");
+    // printf("\n CF");
         if (insOp0 == 0) {
             cont = 0;
         }

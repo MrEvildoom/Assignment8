@@ -15,5 +15,3 @@ indexpass:  ld $1, r7       #set r7 = 1
 .pos 0x400a
 a:          .long 0x2000
 b:          .long 0x3000
-# j *o(rt) dtpp pc ← m[r[t] + (o == pp*4)]
-# j *(rb,ri,4) ebi- pc ← m[r[b] + r[i]*4]
